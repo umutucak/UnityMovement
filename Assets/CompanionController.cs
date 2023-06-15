@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class CompanionController : MonoBehaviour
 {
-    GameObject master;
+    public Transform masterTransform;
     float speed = 9;
     float companionDistance;
 
     void Start()
     {
-        master = GameObject.Find("Master");
         companionDistance = GetCompanionDistance() + 2;
-        print(companionDistance);
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (GetDistance() > companionDistance)
@@ -29,16 +27,16 @@ public class CompanionController : MonoBehaviour
 
     Vector3 GetDirection()
     {
-        return new Vector3(master.transform.position.x - transform.position.x, 0, master.transform.position.z - transform.position.z).normalized;
+        return new Vector3(masterTransform.position.x - transform.position.x, 0, masterTransform.position.z - transform.position.z).normalized;
     }
 
     float GetDistance()
     {
-        return Mathf.Sqrt(Mathf.Pow(transform.position.x - master.transform.position.x, 2) + Mathf.Pow(transform.position.z - master.transform.position.z, 2));
+        return Mathf.Sqrt(Mathf.Pow(transform.position.x - masterTransform.position.x, 2) + Mathf.Pow(transform.position.z - masterTransform.position.z, 2));
     }
 
     float GetCompanionDistance()
     {
-        return (master.transform.lossyScale.x + master.transform.lossyScale.y) / 2;
+        return (masterTransform.lossyScale.x + masterTransform.lossyScale.y) / 2;
     }
 }
