@@ -7,21 +7,20 @@ public class CompanionController : MonoBehaviour
 {
     GameObject master;
     float speed = 9;
+    float companionDistance;
 
-    // Start is called before the first frame update
     void Start()
     {
         master = GameObject.Find("Master");
+        companionDistance = GetCompanionDistance() + 2;
+        print(companionDistance);
     }
-
     // Update is called once per frame
     void Update()
     {
-        print("Distance: " + GetDistance());
-        if (GetDistance() > 2.5)
+        if (GetDistance() > companionDistance)
         {
             Vector3 direction = GetDirection();
-            print("Direction: " + GetDirection());
             Vector3 velocity = direction * speed;
             Vector3 movement = velocity * Time.deltaTime;
             transform.position += movement;
@@ -36,5 +35,10 @@ public class CompanionController : MonoBehaviour
     float GetDistance()
     {
         return Mathf.Sqrt(Mathf.Pow(transform.position.x - master.transform.position.x, 2) + Mathf.Pow(transform.position.z - master.transform.position.z, 2));
+    }
+
+    float GetCompanionDistance()
+    {
+        return (master.transform.lossyScale.x + master.transform.lossyScale.y) / 2;
     }
 }
