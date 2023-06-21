@@ -6,7 +6,7 @@ using UnityEngine;
 public class CompanionController : MonoBehaviour
 {
     public Transform masterTransform;
-    float speed = 9;
+    public float speed;
     float companionDistance;
 
     void Start()

@@ -4,25 +4,58 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-    float speed = 10;
-    // Update is called once per frame
+    public float speed;
+    public float jumpForce;
+    Rigidbody rb;
+    bool grounded;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+
+    }
+
     void Update()
     {
         if (Input.anyKey)
         {
-            Vector3 movement = MovementInput();
-            //transform.position += movement * Time.deltaTime;
-            transform.Translate(movement);
+            Move();
+            Jump();
         }
     }
 
-    Vector3 MovementInput()
+    void Move()
     {
-        Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        Vector3 input = new(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         Vector3 direction = input.normalized;
         Vector3 velocity = direction * speed;
         Vector3 movement = velocity * Time.deltaTime;
 
-        return movement;
+        transform.Translate(movement);
     }
+
+    void Jump()
+    {
+        if (Input.GetButton("Jump") && grounded)
+        {
+            groundedControl(false);
+            rb.AddForce(10f * jumpForce * transform.up);
+        }
+    }
+
+    void groundedControl(bool groundedState)
+    {
+        grounded = groundedState;
+        print(grounded);
+    }
+
+    void OnTriggerEnter(Collider triggerCollider)
+    {
+        if (triggerCollider.gameObject.CompareTag("surface"))
+        {
+            print("contact");
+            groundedControl(true);
+        }
+    }
+
 }
