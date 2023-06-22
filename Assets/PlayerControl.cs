@@ -8,11 +8,12 @@ public class PlayerControl : MonoBehaviour
     public float jumpForce;
     Rigidbody rb;
     bool grounded;
+    bool crouched;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
+        crouched = false;
     }
 
     void Update()
@@ -21,6 +22,7 @@ public class PlayerControl : MonoBehaviour
         {
             Move();
             Jump();
+            Crouch();
         }
     }
 
@@ -43,17 +45,37 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    void Crouch()
+    {
+        if (Input.GetKeyDown(KeyCode.C) && !crouched)
+        {
+            crouched = true;
+            Vector3 scaleV = new(transform.localScale.x, transform.localScale.y / 2, transform.localScale.z);
+            transform.localScale = scaleV;
+
+            Vector3 positionV = new(transform.position.x, transform.position.y / 2, transform.position.z);
+            transform.position = positionV;
+        }
+        else if (Input.GetKeyDown(KeyCode.C) && crouched)
+        {
+            crouched = false;
+            Vector3 crouchV = new(transform.localScale.x, transform.localScale.y * 2, transform.localScale.z);
+            transform.localScale = crouchV;
+
+            Vector3 positionV = new(transform.position.x, transform.position.y * 2, transform.position.z);
+            transform.position = positionV;
+        }
+    }
+
     void groundedControl(bool groundedState)
     {
         grounded = groundedState;
-        print(grounded);
     }
 
     void OnTriggerEnter(Collider triggerCollider)
     {
         if (triggerCollider.gameObject.CompareTag("surface"))
         {
-            print("contact");
             groundedControl(true);
         }
     }
